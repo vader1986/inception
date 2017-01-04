@@ -105,27 +105,28 @@ while not done:
     # Move the player
     player.rect.x += player.speed * direction[0]
     player.rect.y += player.speed * direction[1]
+
     # Check for collusions
     blocks_hit_list = pygame.sprite.spritecollide(player, block_list, False)
     if len(blocks_hit_list) > 0:
         player.hurtme(1)
         player.print_player()
-    # control movement direction
 
+    # control movement direction
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                speed = [-1, 0]
+                direction = [-1, 0]
             if event.key == pygame.K_RIGHT:
-                speed = [1, 0]
+                direction = [1, 0]
             if event.key == pygame.K_UP:
-                speed = [0, -1]
+                direction = [0, -1]
             if event.key == pygame.K_DOWN:
-                speed = [0, 1]
+                direction = [0, 1]
         if event.type == pygame.KEYUP:
-            speed = [0, 0]
+            direction = [0, 0]
 
     # Clear the screen
     screen.fill(BLACK)
