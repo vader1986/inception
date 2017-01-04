@@ -3,7 +3,7 @@ Contains all important classes for the game.
 '''
 
 # Libraries
-import sys, pygame, os
+import sys, pygame, os, random
 
 #----------------+
 # Player Class
@@ -32,19 +32,38 @@ class Player(pygame.sprite.Sprite):
     # print method
     def print_player(self):
         print "Player:          " + self.name
-        print "Hitpoints:       " + self.hitpts
-        print "Position (x/y):  (" + str(self.position["x"]) + "/" + str(self.position["y"]) + ")"
+        print "Hitpoints:       " + str(self.hitpts)
 
 # when player gets hit
     def hurtme(self, dmg):
-        self.hitpts-=dmg
-        if self.hitpts<=0:
-            self.alive = False
-            print self.name + " died! Nooooooo"
+        if self.alive:
+            self.hitpts-=dmg
+            if self.hitpts<=0:
+                self.alive = False
+                print self.name + " died! Nooooooo"
+
+#----------------------+
+# obstackle class
+#----------------------+
+class Obstacle(pygame.sprite.Sprite):
+    '''obstacles!'''
+
+# Constructor
+    def __init__(self, maxx, maxy):
+        pygame.sprite.Sprite.__init__(self)
+        script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
+        rel_path = "imgs/stone.png"
+        abs_file_path = os.path.join(script_dir, rel_path)
+        self.image = pygame.image.load(abs_file_path).convert()
+        self.rect = self.image.get_rect()
+        self.rect.x = random.randint(0, maxx)
+        self.rect.y = random.randint(0, maxy)
 
 
-
+#-----------------------------------------------+
 # Start GAME and stuff
+#-----------------------------------------------+
+
 BLACK = (  0,   0,   0)
 WHITE = (255, 255, 255)
 RED   = (255,   0,   0)
@@ -61,8 +80,14 @@ block_list = pygame.sprite.Group()
 
 all_sprites_list = pygame.sprite.Group()
 
-# Create a RED player block
-player = Player("Basti", 1000, [])
+
+for i in range(10):
+    obs = Obstacle(screen_width, screen_height)
+    block_list.add(obs)
+    all_sprites_list.add(obs)
+
+# Create the player
+player = Player("Basti", 100, [])
 all_sprites_list.add(player)
 
 # Loop until the user clicks the close button.
@@ -76,11 +101,15 @@ score = 0
 # -------- Main Program Loop -----------
 speed = [0, 0]
 while not done:
-
-
+    # Move the player
     player.rect.x += speed[0]
     player.rect.y += speed[1]
-
+    # Check for collusions
+    blocks_hit_list = pygame.sprite.spritecollide(player, block_list, False)
+    if len(blocks_hit_list) > 0:
+        player.hurtme(1)
+        player.print_player()
+    # control movement direction
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
@@ -107,43 +136,3 @@ while not done:
     pygame.display.flip()
 
 pygame.quit()
-
-'''
-pygame.init()
-
-size = width, height = 320, 240
-speed = [2, 2]
-black = 0, 0, 0
-
-screen = pygame.display.set_mode(size)
-
-script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
-rel_path = "imgs/hero.png"
-abs_file_path = os.path.join(script_dir, rel_path)
-hero = pygame.image.load(abs_file_path)
-ballrect = hero.get_rect()
-
-while 1:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT: sys.exit()
-
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                speed = [-2, 0]
-            if event.key == pygame.K_RIGHT:
-                speed = [2, 0]
-            if event.key == pygame.K_UP:
-                speed = [0, -2]
-            if event.key == pygame.K_DOWN:
-                speed = [0, 2]
-        if ballrect.left < 0 or ballrect.right > width:
-            speed[0] = -speed[0]
-        if ballrect.top < 0 or ballrect.bottom > height:
-            speed[1] = -speed[1]
-        ballrect = ballrect.move(speed)
-        speed = [0, 0]
-
-    screen.fill(black)
-    screen.blit(hero, ballrect)
-    pygame.display.flip()
-'''
