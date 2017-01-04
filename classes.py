@@ -15,6 +15,7 @@ class Player(pygame.sprite.Sprite):
     angle = 0           # player's viewing direction
     hitpts = 100        # player's life points
     alive = True        # is player alive
+    speed = 5           # speed of the player
     inventory = []      # player's inventory (weapons, medicits, ...)
 
 # constructor
@@ -99,29 +100,30 @@ clock = pygame.time.Clock()
 score = 0
 
 # -------- Main Program Loop -----------
-speed = [0, 0]
+direction = [0, 0]
 while not done:
     # Move the player
-    player.rect.x += speed[0]
-    player.rect.y += speed[1]
+    player.rect.x += player.speed * direction[0]
+    player.rect.y += player.speed * direction[1]
     # Check for collusions
     blocks_hit_list = pygame.sprite.spritecollide(player, block_list, False)
     if len(blocks_hit_list) > 0:
         player.hurtme(1)
         player.print_player()
     # control movement direction
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                speed = [-5, 0]
+                speed = [-1, 0]
             if event.key == pygame.K_RIGHT:
-                speed = [5, 0]
+                speed = [1, 0]
             if event.key == pygame.K_UP:
-                speed = [0, -5]
+                speed = [0, -1]
             if event.key == pygame.K_DOWN:
-                speed = [0, 5]
+                speed = [0, 1]
         if event.type == pygame.KEYUP:
             speed = [0, 0]
 
