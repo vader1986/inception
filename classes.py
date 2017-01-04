@@ -41,6 +41,7 @@ class Player(pygame.sprite.Sprite):
             self.hitpts-=dmg
             if self.hitpts<=0:
                 self.alive = False
+                self.speed = 0
                 print self.name + " died! Nooooooo"
 
 #----------------------+
