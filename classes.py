@@ -73,8 +73,8 @@ RED   = (255,   0,   0)
 pygame.init()
 
 # Set the height and width of the screen
-screen_width = 700
-screen_height = 400
+screen_width = 400
+screen_height = 300
 screen = pygame.display.set_mode([screen_width, screen_height])
 
 block_list = pygame.sprite.Group()
@@ -97,10 +97,10 @@ done = False
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
 
-score = 0
-
 # -------- Main Program Loop -----------
 direction = [0, 0]
+font = pygame.font.SysFont("menlo", bold=True, size=12)
+
 while not done:
     # Move the player
     player.rect.x += player.speed * direction[0]
@@ -110,7 +110,6 @@ while not done:
     blocks_hit_list = pygame.sprite.spritecollide(player, block_list, False)
     if len(blocks_hit_list) > 0:
         player.hurtme(1)
-        player.print_player()
 
     # control movement direction
     for event in pygame.event.get():
@@ -133,6 +132,9 @@ while not done:
 
     all_sprites_list.draw(screen)
 
+    # HUD: Print stats
+    screen.blit(font.render("Player: " + player.name, 1, RED), (10, 5))
+    screen.blit(font.render("Hitpoints:  " + str(player.hitpts), 1, RED), (10, 18))
     clock.tick(60)
 
     # Go ahead and update the screen with what we've drawn.
