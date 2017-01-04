@@ -118,13 +118,13 @@ while not done:
             done = True
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                direction = [-1, 0]
+                direction[0]-= 1
             if event.key == pygame.K_RIGHT:
-                direction = [1, 0]
+                direction[0]+=1
             if event.key == pygame.K_UP:
-                direction = [0, -1]
+                direction[1]-=1
             if event.key == pygame.K_DOWN:
-                direction = [0, 1]
+                direction[1]+=1
         if event.type == pygame.KEYUP:
             direction = [0, 0]
 
