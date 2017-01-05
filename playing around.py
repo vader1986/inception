@@ -3,46 +3,40 @@ Contains all important classes for the game.
 '''
 
 # Libraries
-import sys, pygame, os, random
+import sys, pygame, os, random, math, class_character
+
+
+# Helper functions
+
+# Loads an image from a given relative path
+def load_img(path):
+    script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
+    abs_file_path = os.path.join(script_dir, path)
+    this_img = pygame.image.load(abs_file_path).convert()
+    return this_img
 
 #----------------+
 # Player Class
 #----------------+
-class Player(pygame.sprite.Sprite):
+class Player(class_character.Character):
     """Class for the player object."""
 # player attributes
     name = "Jeffrey"    # player Name
-    angle = 0           # player's viewing direction
-    hitpts = 100        # player's life points
-    alive = True        # is player alive
-    speed = 5           # speed of the player
     inventory = []      # player's inventory (weapons, medicits, ...)
-
+    base_img = []
 # constructor
-    def __init__(self, name, hitpts, inventory):
-        pygame.sprite.Sprite.__init__(self)
+    def __init__(self, name, inventory):
+        pygame.sprite.Sprite.__init__(self)  # needed
         self.name = name
-        self.hitpts = hitpts
         self.inventory = inventory
-        script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
-        rel_path = "imgs/hero.png"
-        abs_file_path = os.path.join(script_dir, rel_path)
-        self.image = pygame.image.load(abs_file_path).convert()
+        self.image = load_img("imgs/Hero.png")
+        self.base_img = self.image
         self.rect = self.image.get_rect()
 
-    # print method
-    def print_player(self):
-        print "Player:          " + self.name
-        print "Hitpoints:       " + str(self.hitpts)
-
-# when player gets hit
-    def hurtme(self, dmg):
-        if self.alive:
-            self.hitpts-=dmg
-            if self.hitpts<=0:
-                self.alive = False
-                self.speed = 0
-                print self.name + " died! Nooooooo"
+    # Set Image angle
+    def adjust_img(self):
+        self.image = pygame.transform.rotate(
+                self.base_img, -(self.angle))
 
 #----------------------+
 # obstackle class
@@ -65,6 +59,7 @@ class Obstacle(pygame.sprite.Sprite):
 #-----------------------------------------------+
 # Start GAME and stuff
 #-----------------------------------------------+
+
 
 BLACK = (  0,   0,   0)
 WHITE = (255, 255, 255)
@@ -89,7 +84,10 @@ for i in range(10):
     all_sprites_list.add(obs)
 
 # Create the player
-player = Player("Basti", 100, [])
+player = Player("Basti", [])
+player.rect.x = 150
+player.rect.y = 150
+
 all_sprites_list.add(player)
 
 # Loop until the user clicks the close button.
@@ -99,18 +97,13 @@ done = False
 clock = pygame.time.Clock()
 
 # -------- Main Program Loop -----------
-direction = [0, 0]
 font = pygame.font.SysFont("menlo", bold=True, size=12)
 
 while not done:
-    # Move the player
-    player.rect.x += player.speed * direction[0]
-    player.rect.y += player.speed * direction[1]
-
     # Check for collusions
     blocks_hit_list = pygame.sprite.spritecollide(player, block_list, False)
     if len(blocks_hit_list) > 0:
-        player.hurtme(1)
+        print "Bumms"
 
     # control movement direction
     for event in pygame.event.get():
@@ -118,24 +111,25 @@ while not done:
             done = True
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                direction[0]-= 1
+                player.turn_left(5)
             if event.key == pygame.K_RIGHT:
-                direction[0]+=1
+                player.turn_right(5)
             if event.key == pygame.K_UP:
-                direction[1]-=1
+                player.speed = abs(player.speed)
+                player.move_me()
             if event.key == pygame.K_DOWN:
-                direction[1]+=1
-        if event.type == pygame.KEYUP:
-            direction = [0, 0]
+                player.speed = -abs(player.speed)
+                player.move_me()
+        print player.angle
+        player.adjust_img()
 
     # Clear the screen
-    screen.fill(BLACK)
+    screen.fill(WHITE)
 
     all_sprites_list.draw(screen)
 
     # HUD: Print stats
     screen.blit(font.render("Player: " + player.name, 1, RED), (10, 5))
-    screen.blit(font.render("Hitpoints:  " + str(player.hitpts), 1, RED), (10, 18))
     clock.tick(60)
 
     # Go ahead and update the screen with what we've drawn.
