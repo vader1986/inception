@@ -4,6 +4,7 @@
 import math
 import pygame
 import funcs
+import projectile
 
 
 # Character class
@@ -49,3 +50,9 @@ class Character(pygame.sprite.Sprite):
     def update_img(self):
         self.image = pygame.transform.rotate(
                 self.base_img, -(self.angle))
+
+    # Shoot
+    def fire(self):
+        v = [math.cos(self.angle * math.pi / 180), math.sin(self.angle * math.pi / 180)]
+        shot = projectile.Projectile("imgs/drop2.gif", self.rect.x+v[0], self.rect.y+v[1], self.angle, 10, 0)
+        return shot

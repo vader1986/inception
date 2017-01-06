@@ -28,6 +28,7 @@ screen = pygame.display.set_mode([screen_width, screen_height])
 
 # List with all character sprites
 chars = pygame.sprite.Group()
+shots = pygame.sprite.Group()
 
 # Create the player
 player = class_character.Character(100, 95, 5, "imgs/Hero.png")
@@ -42,6 +43,11 @@ done = False
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
 
+# Use Joystick
+pygame.joystick.init()
+js = pygame.joystick.Joystick(0)
+js.init()
+
 # -------- Main Program Loop -----------
 turnleft    = False
 turnright   = False
@@ -52,6 +58,30 @@ while not done:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
+        # JOYSTICK
+        if event.type == pygame.JOYHATMOTION:
+            evt = js.get_hat(0)
+            if evt[0] == -1: # left
+                turnleft = True
+            if evt[0] == 1:
+                turnright = True
+            if evt[1] == 1:
+                move = True
+                player.speed = abs(player.speed)
+            if evt[1] == -1:
+                move = True
+                player.speed = -abs(player.speed)
+            if evt[0] == 0:
+                turnright   = False
+                turnleft    = False
+            if evt[1] == 0:
+                move = False
+        if event.type == pygame.JOYBUTTONDOWN:
+            evt = js.get_button(1)
+            if evt == 1:
+                shot = player.fire()
+                shots.add(shot)
+        # KEYBOARD
         # React to pressed keys
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
@@ -64,6 +94,10 @@ while not done:
             if event.key == pygame.K_DOWN:
                 move = True
                 player.speed = -abs(player.speed)
+            if event.key == pygame.K_SPACE:
+                shot = player.fire()
+                shots.add(shot)
+
         # React to key released
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
@@ -85,6 +119,11 @@ while not done:
     screen.fill(WHITE)
 
     chars.draw(screen)
+
+    for i in shots:
+        i.move()
+
+    shots.draw(screen)
 
     # HUD: Print stats
     screen.blit(font.render("Hitpoints: " + str(player.hitpoints) + "/" + str(player.maxhitpoints), 1, RED), (10, 5))
