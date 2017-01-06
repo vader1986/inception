@@ -5,9 +5,101 @@ Contains all important classes for the game.
 # Libraries
 import sys, pygame, os, random, math, class_character
 
+#-----------------------------------------------+
+# Start GAME and stuff
+#-----------------------------------------------+
+# Settings
+BLACK = (  0,   0,   0)
+WHITE = (255, 255, 255)
+RED   = (255,   0,   0)
 
-# Helper functions
+# Initialize Pygame
+pygame.init()
 
+# fonts = pygame.font.get_fonts()
+# for i in fonts:
+#    print i
+font = pygame.font.SysFont("arial", bold=True, size=12)
+
+# Set the height and width of the screen
+screen_width = 400
+screen_height = 300
+screen = pygame.display.set_mode([screen_width, screen_height])
+
+# List with all character sprites
+chars = pygame.sprite.Group()
+
+# Create the player
+player = class_character.Character(100, 95, 5, "imgs/Hero.png")
+player.rect.x = 150
+player.rect.y = 150
+
+chars.add(player)
+
+# Loop until the user clicks the close button.
+done = False
+
+# Used to manage how fast the screen updates
+clock = pygame.time.Clock()
+
+# -------- Main Program Loop -----------
+turnleft    = False
+turnright   = False
+move   = False
+
+while not done:
+    # control movement direction
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            done = True
+        # React to pressed keys
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                turnleft = True
+            if event.key == pygame.K_RIGHT:
+                turnright = True
+            if event.key == pygame.K_UP:
+                move = True
+                player.speed = abs(player.speed)
+            if event.key == pygame.K_DOWN:
+                move = True
+                player.speed = -abs(player.speed)
+        # React to key released
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_LEFT:
+                turnleft = False
+            if event.key == pygame.K_RIGHT:
+                turnright = False
+            if event.key == pygame.K_UP:
+                move = False
+            if event.key == pygame.K_DOWN:
+                move = False
+    if move:
+        player.move()
+    if turnright:
+        player.turn(5, "right")
+    if turnleft:
+        player.turn(5, "left")
+
+    # Clear the screen
+    screen.fill(WHITE)
+
+    chars.draw(screen)
+
+    # HUD: Print stats
+    screen.blit(font.render("Hitpoints: " + str(player.hitpoints) + "/" + str(player.maxhitpoints), 1, RED), (10, 5))
+
+    # 60 fps
+    clock.tick(60)
+
+    # Go ahead and update the screen with what we've drawn.
+    pygame.display.flip()
+
+pygame.quit()
+
+
+
+'''
 # Loads an image from a given relative path
 def load_img(path):
     script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
@@ -42,7 +134,6 @@ class Player(class_character.Character):
 # obstackle class
 #----------------------+
 class Obstacle(pygame.sprite.Sprite):
-    '''obstacles!'''
 
 # Constructor
     def __init__(self, maxx, maxy):
@@ -55,84 +146,15 @@ class Obstacle(pygame.sprite.Sprite):
         self.rect.x = random.randint(0, maxx)
         self.rect.y = random.randint(0, maxy)
 
-
-#-----------------------------------------------+
-# Start GAME and stuff
-#-----------------------------------------------+
-
-
-BLACK = (  0,   0,   0)
-WHITE = (255, 255, 255)
-RED   = (255,   0,   0)
-
-# Initialize Pygame
-pygame.init()
-
-# Set the height and width of the screen
-screen_width = 400
-screen_height = 300
-screen = pygame.display.set_mode([screen_width, screen_height])
-
-block_list = pygame.sprite.Group()
-
-all_sprites_list = pygame.sprite.Group()
-
-
 for i in range(10):
     obs = Obstacle(screen_width, screen_height)
     block_list.add(obs)
     all_sprites_list.add(obs)
 
-# Create the player
-player = Player("Basti", [])
-player.rect.x = 150
-player.rect.y = 150
-
-all_sprites_list.add(player)
-
-# Loop until the user clicks the close button.
-done = False
-
-# Used to manage how fast the screen updates
-clock = pygame.time.Clock()
-
-# -------- Main Program Loop -----------
-font = pygame.font.SysFont("menlo", bold=True, size=12)
-
-while not done:
-    # Check for collusions
+# Check for collusions
     blocks_hit_list = pygame.sprite.spritecollide(player, block_list, False)
     if len(blocks_hit_list) > 0:
         print "Bumms"
 
-    # control movement direction
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            done = True
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                player.turn_left(5)
-            if event.key == pygame.K_RIGHT:
-                player.turn_right(5)
-            if event.key == pygame.K_UP:
-                player.speed = abs(player.speed)
-                player.move_me()
-            if event.key == pygame.K_DOWN:
-                player.speed = -abs(player.speed)
-                player.move_me()
-        print player.angle
-        player.adjust_img()
 
-    # Clear the screen
-    screen.fill(WHITE)
-
-    all_sprites_list.draw(screen)
-
-    # HUD: Print stats
-    screen.blit(font.render("Player: " + player.name, 1, RED), (10, 5))
-    clock.tick(60)
-
-    # Go ahead and update the screen with what we've drawn.
-    pygame.display.flip()
-
-pygame.quit()
+'''
