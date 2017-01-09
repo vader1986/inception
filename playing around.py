@@ -3,7 +3,7 @@ Contains all important classes for the game.
 '''
 
 # Libraries
-import sys, pygame, os, random, math, class_character
+import sys, pygame, os, random, math, class_character, class_weapon
 
 #-----------------------------------------------+
 # Start GAME and stuff
@@ -12,6 +12,25 @@ import sys, pygame, os, random, math, class_character
 BLACK = (  0,   0,   0)
 WHITE = (255, 255, 255)
 RED   = (255,   0,   0)
+
+# Weapon objects
+gun = class_weapon.Weapon("Gun",
+             1,
+             5,
+             50,
+             10,
+             "imgs/gun.gif",
+             "",
+             "imgs/drop2.gif")
+
+rifle = class_weapon.Weapon("Rifle",
+             3,
+             10,
+             70,
+             8,
+             "imgs/rifle.gif",
+             "",
+             "imgs/star.gif")
 
 # Initialize Pygame
 pygame.init()
@@ -34,8 +53,16 @@ shots = pygame.sprite.Group()
 player = class_character.Character(100, 95, 5, "imgs/Hero.png")
 player.rect.x = 150
 player.rect.y = 150
+player.add_weapon(gun);
+player.add_weapon(rifle);
 
 chars.add(player)
+
+villian = class_character.Character(10, 10, 5, "imgs/Villian.gif")
+villian.rect.x = 200
+villian.rect.y = 200
+
+chars.add(villian)
 
 # Loop until the user clicks the close button.
 done = False
@@ -44,14 +71,15 @@ done = False
 clock = pygame.time.Clock()
 
 # Use Joystick
-pygame.joystick.init()
-js = pygame.joystick.Joystick(0)
-js.init()
+if pygame.joystick.get_count() > 0:
+    pygame.joystick.init()
+    js = pygame.joystick.Joystick(0)
+    js.init()
 
 # -------- Main Program Loop -----------
 turnleft    = False
 turnright   = False
-move   = False
+move        = False
 
 while not done:
     # control movement direction
@@ -97,6 +125,10 @@ while not done:
             if event.key == pygame.K_SPACE:
                 shot = player.fire()
                 shots.add(shot)
+            if event.key == pygame.K_q:
+                player.next_weapon(-1)
+            if event.key == pygame.K_e:
+                player.next_weapon(1)
 
         # React to key released
         if event.type == pygame.KEYUP:
@@ -114,6 +146,11 @@ while not done:
         player.turn(5, "right")
     if turnleft:
         player.turn(5, "left")
+
+    # Check for collusions of villians with projectiles
+    villian_hits = pygame.sprite.spritecollide(villian, shots, True)
+    if len(villian_hits) > 0:
+        villian.get_hit(shot.dmg)
 
     # Clear the screen
     screen.fill(WHITE)
