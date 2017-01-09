@@ -3,7 +3,7 @@ Contains all important classes for the game.
 '''
 
 # Libraries
-import sys, pygame, os, random, math, class_character, class_weapon
+import sys, pygame, os, random, math, class_character, class_weapon, funcs
 
 #-----------------------------------------------+
 # Start GAME and stuff
@@ -12,6 +12,10 @@ import sys, pygame, os, random, math, class_character, class_weapon
 BLACK = (  0,   0,   0)
 WHITE = (255, 255, 255)
 RED   = (255,   0,   0)
+
+pygame.mixer.init(44100, -16, 2, 2048)
+change_weapon_sound = funcs.load_sound("sounds/us_quarter.ogg")
+hit_sound = funcs.load_sound("sounds/missile_explosion.ogg")
 
 # Weapon objects
 gun = class_weapon.Weapon("Gun",
@@ -122,13 +126,16 @@ while not done:
             if event.key == pygame.K_DOWN:
                 move = True
                 player.speed = -abs(player.speed)
-            if event.key == pygame.K_SPACE:
+            if event.key == pygame.K_SPACE: # Fire a shot
                 shot = player.fire()
                 shots.add(shot)
-            if event.key == pygame.K_q:
+                hit_sound.play()
+            if event.key == pygame.K_q: # Change weapon
                 player.next_weapon(-1)
+                change_weapon_sound.play()
             if event.key == pygame.K_e:
                 player.next_weapon(1)
+                change_weapon_sound.play()
 
         # React to key released
         if event.type == pygame.KEYUP:
@@ -151,6 +158,8 @@ while not done:
     villian_hits = pygame.sprite.spritecollide(villian, shots, True)
     if len(villian_hits) > 0:
         villian.get_hit(shot.dmg)
+
+
 
     # Clear the screen
     screen.fill(WHITE)
