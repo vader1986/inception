@@ -3,7 +3,7 @@ Contains all important classes for the game.
 '''
 
 # Libraries
-import sys, pygame, os, random, math, class_character, class_weapon, funcs
+import sys, pygame, os, random, math, class_player, class_weapon, funcs
 
 #-----------------------------------------------+
 # Start GAME and stuff
@@ -12,10 +12,6 @@ import sys, pygame, os, random, math, class_character, class_weapon, funcs
 BLACK = (  0,   0,   0)
 WHITE = (255, 255, 255)
 RED   = (255,   0,   0)
-
-pygame.mixer.init(44100, -16, 2, 2048)
-change_weapon_sound = funcs.load_sound("sounds/us_quarter.ogg")
-hit_sound = funcs.load_sound("sounds/missile_explosion.ogg")
 
 # Weapon objects
 gun = class_weapon.Weapon("Gun",
@@ -54,7 +50,7 @@ chars = pygame.sprite.Group()
 shots = pygame.sprite.Group()
 
 # Create the player
-player = class_character.Character(100, 95, 5, "imgs/Hero.png")
+player = class_player.Player("classic", 100, 95, 5)
 player.rect.x = 150
 player.rect.y = 150
 player.add_weapon(gun);
@@ -62,11 +58,11 @@ player.add_weapon(rifle);
 
 chars.add(player)
 
-villian = class_character.Character(10, 10, 5, "imgs/Villian.gif")
-villian.rect.x = 200
-villian.rect.y = 200
+#villian = class_character.Character(10, 10, 5, "imgs/Villian.gif")
+#villian.rect.x = 200
+#villian.rect.y = 200
 
-chars.add(villian)
+# chars.add(villian)
 
 # Loop until the user clicks the close button.
 done = False
@@ -129,13 +125,10 @@ while not done:
             if event.key == pygame.K_SPACE: # Fire a shot
                 shot = player.fire()
                 shots.add(shot)
-                hit_sound.play()
             if event.key == pygame.K_q: # Change weapon
                 player.next_weapon(-1)
-                change_weapon_sound.play()
             if event.key == pygame.K_e:
                 player.next_weapon(1)
-                change_weapon_sound.play()
 
         # React to key released
         if event.type == pygame.KEYUP:
@@ -155,11 +148,9 @@ while not done:
         player.turn(5, "left")
 
     # Check for collusions of villians with projectiles
-    villian_hits = pygame.sprite.spritecollide(villian, shots, True)
-    if len(villian_hits) > 0:
-        villian.get_hit(shot.dmg)
-
-
+ #   villian_hits = pygame.sprite.spritecollide(villian, shots, True)
+ #   if len(villian_hits) > 0:
+ #       villian.get_hit(shot.dmg)
 
     # Clear the screen
     screen.fill(WHITE)
