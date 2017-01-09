@@ -18,19 +18,20 @@ gun = class_weapon.Weapon("Gun",
              1,
              5,
              50,
-             10,
-             "imgs/gun.gif",
-             "",
-             "imgs/drop2.gif")
+             15)
 
 rifle = class_weapon.Weapon("rifle",
              3,
              10,
              70,
-             8,
-             "imgs/rifle.gif",
-             "",
-             "imgs/star.gif")
+             12)
+
+bazooka = class_weapon.Weapon("bazooka",
+             10,
+             20,
+             80,
+             10)
+
 
 # Initialize Pygame
 pygame.init()
@@ -53,8 +54,9 @@ shots = pygame.sprite.Group()
 player = class_player.Player("classic", 100, 95, 5)
 player.rect.x = 150
 player.rect.y = 150
-player.add_weapon(gun);
-player.add_weapon(rifle);
+player.add_weapon(gun)
+player.add_weapon(rifle)
+player.add_weapon(bazooka)
 
 chars.add(player)
 

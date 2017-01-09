@@ -29,9 +29,10 @@ class Player(class_character.Character):
             return None
         else:
             v       = [math.cos(self.angle * math.pi / 180), math.sin(self.angle * math.pi / 180)]
-            shot    = self.inventory[self.equiped_weapon].generateProjectile(   self.rect.x + v[0],
-                                                                                self.rect.y + v[1],
-                                                                                self.angle)
+            shot    = self.inventory[self.equiped_weapon].generateProjectile(self.theme,
+                                                                             self.rect.x + v[0],
+                                                                             self.rect.y + v[1],
+                                                                             self.angle)
             self.sound_fire.play() # Play sound when shooting
             return shot
 
