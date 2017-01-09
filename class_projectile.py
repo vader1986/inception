@@ -32,5 +32,3 @@ class Projectile(pygame.sprite.Sprite):
     # Set the angle of the img according to the shooting angle
     def update_img(self):
         self.image = pygame.transform.rotate(self.base_img, -(self.angle))
-
-# KILL THE PROJECTILE WHEN IT IS OUTSIDE OF THE LEVEL OR WHEN IT HITS SOMETHING

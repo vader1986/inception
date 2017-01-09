@@ -23,7 +23,7 @@ gun = class_weapon.Weapon("Gun",
              "",
              "imgs/drop2.gif")
 
-rifle = class_weapon.Weapon("Rifle",
+rifle = class_weapon.Weapon("rifle",
              3,
              10,
              70,
@@ -163,7 +163,8 @@ while not done:
     shots.draw(screen)
 
     # HUD: Print stats
-    screen.blit(font.render("Hitpoints: " + str(player.hitpoints) + "/" + str(player.maxhitpoints), 1, RED), (10, 5))
+#    screen.blit(font.render("Hitpoints: " + str(player.hitpoints) + "/" + str(player.maxhitpoints), 1, RED), (10, 5))
+    funcs.draw_HUD(player, screen)
 
     # 60 fps
     clock.tick(60)
