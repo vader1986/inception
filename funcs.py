@@ -55,17 +55,24 @@ def draw_HUD(player, screen):
     screen_info     = pygame.display.Info()
 
     # Draw a rectangle containing an img representing the currently used weapon
+    border          = 18
     height          = 50
     width           = 50
     img             = load_img("imgs/" + player.theme + "/weapon/" + player.inventory[player.equiped_weapon].name + ".gif")
     img             = pygame.transform.scale(img, (width, height))
     img_rect        = img.get_rect()
+    bg_img          = load_img("imgs/textures/light_penal.jpg")
+    bg_img          = pygame.transform.scale(bg_img, (width+border, height+border))
+    bg_img_rect     = bg_img.get_rect()
     x               = screen_info.current_w / 2 - width / 2
-    y               = screen_info.current_h - height - 5
+    y               = screen_info.current_h - height - border
     img_rect.x      = x
     img_rect.y      = y
+    bg_img_rect.x   = x - border/2
+    bg_img_rect.y   = y - border/2
     # Draw the stuff
-    pygame.draw.rect(screen, RED, (x, y, width, height), 0)
+#    pygame.draw.rect(screen, RED, (x, y, width, height), 0)
+    screen.blit(bg_img, bg_img_rect)
     screen.blit(img, img_rect)
 
 # The game loop
