@@ -1,7 +1,7 @@
 # All helper functions
 
 # Libraries
-import os, pygame, class_player, class_weapon
+import os, pygame, class_player, class_weapon, class_level, class_obstacle, random, math
 
 # Params
 # Colors
@@ -49,15 +49,27 @@ def generate_weapons():
     wpn.append(bazooka)
     return wpn
 
+# Move the player's position on the map
+def move_player(player, level):
+    v = (math.cos(player.angle * math.pi / 180), math.sin(player.angle * math.pi / 180))
+    new_pos_x = player.level_pos_x + v[0] * player.speed
+    new_pos_y = player.level_pos_y + v[1] * player.speed
+    if 0 < new_pos_x < level.width and 0 < new_pos_y < level.height:
+        player.level_pos_x += v[0] * player.speed
+        player.level_pos_y += v[1] * player.speed
+    else:
+        print "bounce of the level wall"
+
+
 # Draw the HUD
 def draw_HUD(player, screen):
     # Get information about the screen (dimension)
     screen_info     = pygame.display.Info()
 
     # Draw a rectangle containing an img representing the currently used weapon
-    border          = 18
-    height          = 50
-    width           = 50
+    border          = 12
+    height          = 35
+    width           = 35
     img             = load_img("imgs/" + player.theme + "/weapon/" + player.inventory[player.equiped_weapon].name + ".gif")
     img             = pygame.transform.scale(img, (width, height))
     img_rect        = img.get_rect()
@@ -71,7 +83,6 @@ def draw_HUD(player, screen):
     bg_img_rect.x   = x - border/2
     bg_img_rect.y   = y - border/2
     # Draw the stuff
-#    pygame.draw.rect(screen, RED, (x, y, width, height), 0)
     screen.blit(bg_img, bg_img_rect)
     screen.blit(img, img_rect)
 
@@ -93,26 +104,44 @@ def game_loop():
     screen = pygame.display.set_mode([screen_width, screen_height])
 
     # List with all character sprites
-    chars = pygame.sprite.Group()
-    shots = pygame.sprite.Group()
+    chars       = pygame.sprite.Group()
+    shots       = pygame.sprite.Group()
+    level_obs   = pygame.sprite.Group()
+
+
+    '''---------------------------------------------------------------+
+        Create dummy level for testing.
+    '''
+
+    lvl         = class_level.Level()
+    lvl.set_screen(screen)
+    lvl.height  = 1000
+    lvl.width   = 1000
+    for i in range(10):
+        obs = class_obstacle.Obstacle(random.randint(0, lvl.width), random.randint(0, lvl.height), [30, 35], "imgs/classic/obs/tree1.gif")
+        lvl.add_obstacle(obs)
+        level_obs.add(obs)
+    '''
+    End of level stuff
+    ---------------------------------------------------------------+'''
 
     # Generate a list with weapons
     weapons = generate_weapons()
 
     # Create the player
     player = class_player.Player("classic", 100, 95, 5)
-    player.rect.x = 150
-    player.rect.y = 150
+
+    # Position of the player on the screen
+    player.rect.x = screen_width/2-6
+    player.rect.y = screen_height/2
+
+    player.level_pos_x = lvl.width/2
+    player.level_pos_y = lvl.height/2
 
     for i in weapons: # Add all weapons to the players inventory
         player.add_weapon(i)
 
     chars.add(player)
-
-    # villian = class_character.Character(10, 10, 5, "imgs/Villian.gif")
-    # villian.rect.x = 200
-    # villian.rect.y = 200
-    # chars.add(villian)
 
     # Loop until the user clicks the close button.
     done = False
@@ -120,7 +149,9 @@ def game_loop():
     # Used to manage how fast the screen updates
     clock = pygame.time.Clock()
 
+    ''' THE HUGE GAME LOOP! '''
     while not done:
+
         # Check for events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -145,6 +176,8 @@ def game_loop():
                     player.next_weapon(-1)
                 if event.key == next_w:
                     player.next_weapon(1)
+                if event.key == pygame.K_w: # DEBUG
+                    print str(player.level_pos_x) + "/" + str(player.level_pos_y)
             # React to key released
             if event.type == pygame.KEYUP:
                 if event.key == left:
@@ -156,23 +189,26 @@ def game_loop():
                 if event.key == down:
                     move = False
         if move:
-            player.move()
+            move_player(player, lvl)
         if turnright:
             player.turn(5, "right")
         if turnleft:
             player.turn(5, "left")
+
         # Clear the screen
         screen.fill(WHITE)
 
-        chars.draw(screen)
-
+        # Move all shots
         for i in shots:
             i.move()
 
+        # Draw to the screen
+        chars.draw(screen)
         shots.draw(screen)
+        # level_obs.draw(screen)
+        lvl.draw_view(player, screen)
 
         # HUD: Print stats
-        #    screen.blit(font.render("Hitpoints: " + str(player.hitpoints) + "/" + str(player.maxhitpoints), 1, RED), (10, 5))
         draw_HUD(player, screen)
 
         # 60 fps

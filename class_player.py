@@ -12,9 +12,9 @@ class Player(class_character.Character):
 
     def __init__(self, theme, maxhitpoints, hitpoints, speed):
         pygame.sprite.Sprite.__init__(self)  # needed for subclasses of sprites
-        self.maxhitpoints = maxhitpoints
-        self.hitpoints = hitpoints
-        self.speed = speed
+        self.maxhitpoints           = maxhitpoints
+        self.hitpoints              = hitpoints
+        self.speed                  = speed
         self.theme                  = theme
         self.sound_fire             = funcs.load_sound("sounds/"     + theme + "/player/shot.ogg")
         self.sound_change_weapon    = funcs.load_sound("sounds/"     + theme + "/player/change_weapon.ogg")
@@ -22,6 +22,9 @@ class Player(class_character.Character):
 #        self.image                  = pygame.transform.scale(self.image, (24,24)) ==> Add player size to game?
         self.base_img               = self.image
         self.rect                   = self.image.get_rect()
+        # Starting position in the level (might by changed during level initialization)
+        self.level_pos_x            = 0
+        self.level_pos_y            = 0
 
     # fire a shot
     def fire(self):
