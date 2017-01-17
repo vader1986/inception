@@ -18,7 +18,7 @@ class Player(class_character.Character):
         self.theme                  = theme
         self.sound_fire             = funcs.load_sound("sounds/"     + theme + "/player/shot.ogg")
         self.sound_change_weapon    = funcs.load_sound("sounds/"     + theme + "/player/change_weapon.ogg")
-        self.image                  = funcs.load_img("imgs/"         + theme + "/player/player.png")
+        self.image                  = funcs.load_img("imgs/"         + theme + "/player/player.gif")
 #        self.image                  = pygame.transform.scale(self.image, (24,24)) ==> Add player size to game?
         self.base_img               = self.image
         self.rect                   = self.image.get_rect()

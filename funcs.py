@@ -112,11 +112,11 @@ def game_loop():
     '''---------------------------------------------------------------+
         Create dummy level for testing.
     '''
-
     lvl         = class_level.Level()
     lvl.set_screen(screen)
-    lvl.height  = 1000
-    lvl.width   = 1000
+    lvl.height  = 620
+    lvl.width   = 620
+    lvl.generate_random_texture_grid(100,100)
     for i in range(10):
         obs = class_obstacle.Obstacle(random.randint(0, lvl.width), random.randint(0, lvl.height), [30, 35], "imgs/classic/obs/tree1.gif")
         lvl.add_obstacle(obs)
@@ -196,17 +196,20 @@ def game_loop():
             player.turn(5, "left")
 
         # Clear the screen
-        screen.fill(WHITE)
+        screen.fill(BLACK)
 
         # Move all shots
         for i in shots:
             i.move()
 
+        # Draw the level
+        lvl.draw_textures(player, screen)
+        lvl.draw_view(player, screen)
+
         # Draw to the screen
         chars.draw(screen)
         shots.draw(screen)
-        # level_obs.draw(screen)
-        lvl.draw_view(player, screen)
+
 
         # HUD: Print stats
         draw_HUD(player, screen)
