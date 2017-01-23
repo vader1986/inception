@@ -11,24 +11,22 @@ import Constants
 
 class Player(pygame.sprite.Sprite):
 
-    name        = "Jeffrey"
-    hitpoints   = [Constants.player_default_hitpts, Constants.player_default_hitpts] # A list with 2 items. Current_hitpoints and max_hittpoints
+    angle       = 0 # Viewing angle
     position    = [] # Player's position in the level (x, y)
     speed       = Constants.player_default_speed # Players current speed
+    baseimage   = None # The base image, is needed to generate the roated and scaled versions
+    name        = "Jeffrey"
+    hitpoints   = [Constants.player_default_hitpts, Constants.player_default_hitpts] # A list with 2 items. Current_hitpoints and max_hittpoints
     inventory   = [] # Player's weapons
     equiped_weapon = 0 # Which weapon in the inventory is currently equiped
     medipacks   = Constants.player_default_medikits # Number of available medipacks
-    angle       = 0 # Viewing angle
-    baseimage   = None # The base image, is needed to generate the roated and scaled versions
+
 
     def __init__(self, name, level):
         pygame.sprite.Sprite.__init__(self)  # needed for subclasses of sprites
         self.baseimage  = level.all_images[Constants.player_img]
         self.image      = self.baseimage
-#        player_img_size = self.image.get_size()  # Get player image size
         self.rect       = self.image.get_rect()
-#        self.rect.x     = pygame.display.Info().current_w / 2 - player_img_size[0] / 2
-#        self.rect.y     = pygame.display.Info().current_h / 2 - player_img_size[1] / 2
         self.rect.centerx = pygame.display.Info().current_w/2
         self.rect.centery = pygame.display.Info().current_h / 2
 

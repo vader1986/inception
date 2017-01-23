@@ -8,6 +8,7 @@
 import os
 
 import numpy
+import pygame
 
 import Functions
 
@@ -19,7 +20,8 @@ class Level():
     all_images      = {} # A dictionary of all images used for objects, items, etc.
     texture_size    = [] # The dimension of textures in pixels (widht, height)
     texture_grid    = [] # An 2-dimensional array defining which ground textures are used where in the level
-    items           = [] # An array containing all objects that are part of the level (obstacles, villians, items, projectiles)
+    items           = pygame.sprite.Group() # A spriteGroup containing all items in the level
+    render_items    = pygame.sprite.Group() # A spriteGroup that contains only the items that should be rendered
     player          = [] # An object of class player
 
     def __init__(self, theme, width, height):
@@ -40,3 +42,8 @@ class Level():
                     self.all_images[this_name]      = Functions.load_img("imgs/" + self.theme + "/" + i)
         # Update the texture size
         self.texture_size       = self.all_textures[self.all_textures.keys()[0]].get_rect().size
+
+    # Function to be called by the game loop.
+    # Will move projectiles and villians
+    def update(self):
+        pass
