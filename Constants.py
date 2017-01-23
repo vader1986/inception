@@ -15,9 +15,10 @@ WHITE           = (255, 255, 255)
 RED             = (255,0,0)
 
 # Player default attributs
-player_default_speed    = 5
-player_default_hitpts   = 100
-player_default_medikits = 3
+player_default_speed        = 0.1
+player_default_hitpts       = 100
+player_default_medikits     = 3
+player_default_turn_speed   = 5
 
 # Image names, used for objects/textures etc.
 player_img      = "player"

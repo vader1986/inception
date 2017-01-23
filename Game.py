@@ -31,15 +31,15 @@ def renderTextures(level, screen_width, screen_height, screen):
     x_range     = math.ceil(screen_width/level.texture_size[0]/2.0)
     y_range     = math.ceil(screen_height/level.texture_size[1]/2.0)
 
-    x_min       = max(0, int(level.player.position[0] - x_range)) # Indices cannot become negative
+    x_min       = max(0, int(level.player.position[0] - x_range)-1) # Indices cannot become negative
     x_max       = min(int(math.ceil(level.player.position[0] + x_range))+1, len(level.texture_grid))
-    y_min       = max(0, int(level.player.position[1] - y_range))
+    y_min       = max(0, int(level.player.position[1] - y_range)-1)
     y_max       = min(int(math.ceil(level.player.position[1] + y_range))+1, len(level.texture_grid[0])) # Maximum height is number of tiles of texture_grid
 
     for i in range(x_min, x_max): # Render each relevant texture
         for j in range(y_min, y_max):
-            screen_pos_x = level.player.rect.x - (level.player.position[0] - i)*level.texture_size[0] # Texture position on the screen relative to player
-            screen_pos_y = level.player.rect.y - (level.player.position[1] - j)*level.texture_size[1]
+            screen_pos_x = level.player.rect.centerx - (level.player.position[0] - i- 0.5)*level.texture_size[0]# Texture position on the screen relative to player
+            screen_pos_y = level.player.rect.centery - (level.player.position[1] - j - 0.5)*level.texture_size[1]
             screen.blit(level.all_textures[level.all_textures.keys()[int(level.texture_grid[i,j]-1)]], (screen_pos_x, screen_pos_y))
 
 # --------------------------------------------------------------------------------------------------------------+
@@ -50,7 +50,7 @@ def initRandomLevel(theme, width, height):
     lvl.load_textures()                                 # Load textures
     # Add player
     player          = Player.Player("Imadummy", lvl)    # Add a dummy player
-    player.position = [width/2, height/2]
+    player.position = [1, 1]
     lvl.player      = player
     # Generate Texture grid
     n_tex           = len(lvl.all_textures) # How many different textures are there

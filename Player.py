@@ -5,7 +5,7 @@
 #
 #------------------------------------------------------------------------------+
 import pygame
-
+import math
 import Constants
 
 
@@ -18,11 +18,41 @@ class Player(pygame.sprite.Sprite):
     inventory   = [] # Player's weapons
     equiped_weapon = 0 # Which weapon in the inventory is currently equiped
     medipacks   = Constants.player_default_medikits # Number of available medipacks
+    angle       = 0 # Viewing angle
+    baseimage   = None # The base image, is needed to generate the roated and scaled versions
 
     def __init__(self, name, level):
         pygame.sprite.Sprite.__init__(self)  # needed for subclasses of sprites
-        self.image      = level.all_images[Constants.player_img]
-        player_img_size = self.image.get_size()  # Get player image size
+        self.baseimage  = level.all_images[Constants.player_img]
+        self.image      = self.baseimage
+#        player_img_size = self.image.get_size()  # Get player image size
         self.rect       = self.image.get_rect()
-        self.rect.x     = pygame.display.Info().current_w / 2 - player_img_size[0] / 2
-        self.rect.y     = pygame.display.Info().current_h / 2 - player_img_size[1] / 2
+#        self.rect.x     = pygame.display.Info().current_w / 2 - player_img_size[0] / 2
+#        self.rect.y     = pygame.display.Info().current_h / 2 - player_img_size[1] / 2
+        self.rect.centerx = pygame.display.Info().current_w/2
+        self.rect.centery = pygame.display.Info().current_h / 2
+
+    #------------------------------------+
+    # Function to change the angle
+    # and adjust the image accordingly
+    # -----------------------------------+
+    def turn(self, degree):
+        self.angle+=degree
+        # Rotate image
+        self.image = pygame.transform.rotate(self.baseimage, -(self.angle))
+
+    # ------------------------------------+
+    # Function to change the angle
+    # and adjust the image accordingly
+    # -----------------------------------+
+    def move(self, direction):
+        v = (math.cos(self.angle * math.pi / 180), math.sin(self.angle * math.pi / 180))
+        new_pos_x = self.position[0] + v[0] * self.speed
+        new_pos_y = self.position[1] + v[1] * self.speed
+        if direction > 0:
+            self.position[0] += v[0] * self.speed
+            self.position[1] += v[1] * self.speed
+        else:
+            self.position[0] -= v[0] * self.speed
+            self.position[1] -= v[1] * self.speed
+

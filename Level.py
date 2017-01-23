@@ -32,10 +32,11 @@ class Level():
         # get a list of all files in according directory
         txtr_files  = os.listdir("imgs/" + self.theme + "/")
         for i in txtr_files:
-            this_name               = i[3:(len(i)-4)] # Remove the leading indicator if image is texture or not and remove the image file ending
-            if "bg_" in i:
-                self.all_textures[this_name]    = Functions.load_img("imgs/" + self.theme + "/" + i)
-            else:
-                self.all_images[this_name]      = Functions.load_img("imgs/" + self.theme + "/" + i)
+            if i[0] != ".":
+                this_name               = i[3:(len(i)-4)] # Remove the leading indicator if image is texture or not and remove the image file ending
+                if "bg_" in i:
+                    self.all_textures[this_name]    = Functions.load_img("imgs/" + self.theme + "/" + i)
+                else:
+                    self.all_images[this_name]      = Functions.load_img("imgs/" + self.theme + "/" + i)
         # Update the texture size
         self.texture_size       = self.all_textures[self.all_textures.keys()[0]].get_rect().size

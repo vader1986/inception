@@ -4,14 +4,19 @@
 import pygame
 import Constants
 
+#---------------------------------------------------------+
+# Function to react to user input.
+# Turns the player around, shoots, jumps, moves,...
+# Returns true if player is moving, false when player stops
+# moving.
+#---------------------------------------------------------+
 def listen(event, lvl):
-    # Key Pressed events
-    if event.type == pygame.KEYDOWN:
-        if event.key == Constants.left:
-            lvl.player.position[0]-=1
-        if event.key == Constants.right:
-            lvl.player.position[0] += 1
-        if event.key == Constants.up:
-            lvl.player.position[1]-=1
-        if event.key == Constants.down:
-            lvl.player.position[1]+=1
+    pressed = pygame.key.get_pressed()
+    if pressed[Constants.left]:
+        lvl.player.turn(-Constants.player_default_turn_speed)
+    if pressed[Constants.right]:
+        lvl.player.turn(Constants.player_default_turn_speed)
+    if pressed[Constants.up]:
+        lvl.player.move(1)
+    if pressed[Constants.down]:
+        lvl.player.move(-1)

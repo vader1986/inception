@@ -12,3 +12,4 @@ def load_img(path):
     abs_file_path = os.path.join(script_dir, path)
     this_img = pygame.image.load(abs_file_path).convert()
     return this_img
+
