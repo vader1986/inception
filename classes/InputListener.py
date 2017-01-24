@@ -17,9 +17,9 @@ def listen(event, lvl):
     if pressed[Constants.right]:
         lvl.player.turn(Constants.player_default_turn_speed)
     if pressed[Constants.up]:
-        lvl.player.move(1)
+        lvl.player.move(1, lvl)
     if pressed[Constants.down]:
-        lvl.player.move(-1)
+        lvl.player.move(-1, lvl)
     if event.type == pygame.KEYDOWN: # No constant fire
         if pressed[Constants.fire]:
             lvl.player_fire_shot()

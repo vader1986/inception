@@ -42,8 +42,8 @@ def renderTextures(level, screen_width, screen_height, screen):
 
     for i in range(x_min, x_max): # Render each relevant texture
         for j in range(y_min, y_max):
-            screen_pos_x = level.player.rect.centerx - (level.player.position[0] - i- 0.5)*level.texture_size[0]# Texture position on the screen relative to player
-            screen_pos_y = level.player.rect.centery - (level.player.position[1] - j - 0.5)*level.texture_size[1]
+            screen_pos_x = level.player.rect.centerx - (level.player.position[0] - i + .5)*level.texture_size[0]# Texture position on the screen relative to player
+            screen_pos_y = level.player.rect.centery - (level.player.position[1] - j + .5)*level.texture_size[1]
             screen.blit(level.all_textures[level.all_textures.keys()[int(level.texture_grid[i,j]-1)]], (screen_pos_x, screen_pos_y))
 
 

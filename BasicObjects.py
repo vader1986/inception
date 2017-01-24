@@ -16,6 +16,7 @@ from classes import Item, Weapon
 #----------------------------------------------+
 def tree_touched(player):
     print "Hello " + player.name + " you shall not pass!"
+    player.bounce_back(0.11)
 
 def generateTree(lvl, w, h):
     # Generate a name for the object ==> defines skin
