@@ -15,7 +15,6 @@ from classes import Item, Weapon
 # Function to generate a tree on the level
 #----------------------------------------------+
 def tree_touched(player):
-    print "Hello " + player.name + " you shall not pass!"
     player.bounce_back(0.11)
 
 def generateTree(lvl, w, h):
@@ -39,6 +38,16 @@ def generateTree(lvl, w, h):
     return thistree
 
 #----------------------------------------------+
+# Goal-Object: Reach the goal to win.
+#----------------------------------------------+
+def goal_touched(player):
+    print "Player wins!"
+
+def generateGoal(lvl, pos):
+    thisGoal = Item.Item("teleporter", lvl, pos, [64,64], goal_touched, False)
+    return thisGoal
+
+#----------------------------------------------+
 # Function to create the basic weapon: Gun
 #----------------------------------------------+
 def generate_gun_dmg():
@@ -48,3 +57,4 @@ def generate_gun_dmg():
 def generateGun():
     wpn = Weapon.Weapon("gun", 5, 0.2, generate_gun_dmg)
     return wpn
+

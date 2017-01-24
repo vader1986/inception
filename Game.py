@@ -99,6 +99,8 @@ def initRandomLevel(theme, width, height):
     nitems          = width*height/50
     for i in range(0, nitems):
         lvl.items.add(BasicObjects.generateTree(lvl, 36, 48))
+
+    lvl.items.add(BasicObjects.generateGoal(lvl, [10, 10]))
     return lvl
 
 #--------------------------------------------------------------------------------------------------------------+
