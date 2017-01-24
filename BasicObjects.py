@@ -7,9 +7,13 @@
 # - Players cannot walk through trees
 #-----------------------------------------------+
 import random
-import Item
+
+from classes import Item, Weapon
 
 
+#----------------------------------------------+
+# Function to generate a tree on the level
+#----------------------------------------------+
 def tree_touched(player):
     print "Hello " + player.name + " you shall not pass!"
 
@@ -29,6 +33,17 @@ def generateTree(lvl, w, h):
     # w           = treeSkins[type].get_rect().size[0]
     # h           = treeSkins[type].get_rect().size[1]
 
-    thistree    = Item.Item(type, lvl, [x,y], [w, h], tree_touched, False)
+    thistree    = Item.Item(type, lvl, [x, y], [w, h], tree_touched, False)
 
     return thistree
+
+#----------------------------------------------+
+# Function to create the basic weapon: Gun
+#----------------------------------------------+
+def generate_gun_dmg():
+    dmg = random.randint(1, 10)
+    return dmg
+
+def generateGun():
+    wpn = Weapon.Weapon("gun", 5, 0.2, generate_gun_dmg)
+    return wpn

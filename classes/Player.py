@@ -6,6 +6,8 @@
 #------------------------------------------------------------------------------+
 import pygame
 import math
+
+import BasicObjects
 import Constants
 
 
@@ -29,6 +31,8 @@ class Player(pygame.sprite.Sprite):
         self.rect       = self.image.get_rect()
         self.rect.centerx = pygame.display.Info().current_w/2
         self.rect.centery = pygame.display.Info().current_h / 2
+        # By default add a gun to the inventory
+        self.inventory.append(BasicObjects.generateGun())
 
     #------------------------------------+
     # Function to change the angle
@@ -36,8 +40,11 @@ class Player(pygame.sprite.Sprite):
     # -----------------------------------+
     def turn(self, degree):
         self.angle+=degree
+        orig_xy = self.rect.center
         # Rotate image
         self.image = pygame.transform.rotate(self.baseimage, -(self.angle))
+        # Reposition
+        self.rect.center = orig_xy
 
     # ------------------------------------+
     # Function to change the angle
@@ -54,3 +61,8 @@ class Player(pygame.sprite.Sprite):
             self.position[0] -= v[0] * self.speed
             self.position[1] -= v[1] * self.speed
 
+    # ------------------------------------+
+    # Return the currently used weapon
+    # -----------------------------------+
+    def get_current_weapon(self):
+        return self.inventory[self.equiped_weapon]

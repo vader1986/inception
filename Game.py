@@ -4,16 +4,18 @@
 # Manages keyboard/joystick-inputs.
 #
 #---------------------------------------------------------+
+import math
 import random
+
+from classes import Item
+from classes import Level
+from classes import Player
 import pygame
 
 import BasicObjects
 import Constants
-import InputListener
-import Level
-import Item
-import Player
-import math
+from classes import InputListener
+
 
 #--------------------------------------------------------------------------------------------------------------+
 # Functions
@@ -65,8 +67,8 @@ def renderItems(level, screen_width, screen_height, screen):
             level.render_items.add(i)
             screen_pos_x = level.player.rect.centerx - (level.player.position[0] - i.position[0] - 0.5) * level.texture_size[0]  # position on the screen relative to player
             screen_pos_y = level.player.rect.centery - (level.player.position[1] - i.position[1] - 0.5) * level.texture_size[1]
-            i.rect.x = screen_pos_x
-            i.rect.y = screen_pos_y
+            i.rect.centerx = screen_pos_x
+            i.rect.centery = screen_pos_y
         else:
             level.render_items.remove(i)
     level.render_items.draw(screen)
@@ -75,12 +77,6 @@ def renderItems(level, screen_width, screen_height, screen):
 # --------------------------------------------------------------------------------------------------------------+
 # Generate a random map - JUST FOR TESTING
 #--------------------------------------------------------------------------------------------------------------+
-def tree_touched_function(player):
-    print "Hallo" + player.name + " ich bin ein Baum!"
-
-def boost_touched_function(player):
-        player.speed+=0.1
-
 def initRandomLevel(theme, width, height):
     lvl             = Level.Level(theme, width, height) # New empty level
     lvl.load_textures()                                 # Load textures
@@ -136,13 +132,17 @@ while True:
     if ev.type == pygame.QUIT:
         break
 
+    # Move projectiles and villians
+    this_lvl.update()
+
     # Input listener for keyboard (should be gamepad later as well)
     InputListener.listen(ev, this_lvl)
 
     # Collosion detection and handling
     touched = pygame.sprite.spritecollide(this_lvl.player, this_lvl.items, False)
     for i in touched:
-        i.when_touched(this_lvl.player)
+        if type(i) is Item.Item:
+            i.when_touched(this_lvl.player)
 
     # Rendering
     screen.fill(Constants.BLACK)  # Clear the screen

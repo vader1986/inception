@@ -20,3 +20,6 @@ def listen(event, lvl):
         lvl.player.move(1)
     if pressed[Constants.down]:
         lvl.player.move(-1)
+    if event.type == pygame.KEYDOWN: # No constant fire
+        if pressed[Constants.fire]:
+            lvl.player_fire_shot()

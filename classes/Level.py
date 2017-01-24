@@ -11,6 +11,7 @@ import numpy
 import pygame
 
 import Functions
+from classes import Projectile
 
 
 class Level():
@@ -24,10 +25,10 @@ class Level():
     render_items    = pygame.sprite.Group() # A spriteGroup that contains only the items that should be rendered
     player          = [] # An object of class player
 
+    # Constructor
     def __init__(self, theme, width, height):
         self.theme          = theme                         # Set the theme
         self.texture_grid   = numpy.zeros((width, height))  # Set level dimension
-
 
     # Load all relevant textures/images for the level - based on its' theme
     def load_textures(self):
@@ -43,7 +44,18 @@ class Level():
         # Update the texture size
         self.texture_size       = self.all_textures[self.all_textures.keys()[0]].get_rect().size
 
+    # Generate a projectile whenever the player fires a shot
+    def player_fire_shot(self):
+        from_wpn        = self.player.get_current_weapon() # Weapon that was used to fire the shot
+        # Generate a projectile
+        proj            = Projectile.Projectile(self)
+        self.items.add(proj)
+        return proj
+
     # Function to be called by the game loop.
     # Will move projectiles and villians
     def update(self):
-        pass
+        for i in self.items:
+            if type(i) is Projectile.Projectile: # Move all projectiles
+                i.move_me()
+
