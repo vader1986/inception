@@ -8,14 +8,15 @@
 #-----------------------------------------------+
 import random
 
-from classes import Item, Weapon
+from custom_classes import Weapon
+from custom_classes import Item
 
 
 #----------------------------------------------+
 # Function to generate a tree on the level
 #----------------------------------------------+
 def tree_touched(player):
-    player.bounce_back(0.11)
+    player.bounce_back()
 
 def generateTree(lvl, w, h):
     # Generate a name for the object ==> defines skin
@@ -44,17 +45,17 @@ def goal_touched(player):
     print "Player wins!"
 
 def generateGoal(lvl, pos):
-    thisGoal = Item.Item("teleporter", lvl, pos, [64,64], goal_touched, False)
+    thisGoal = Item.Item("teleporter", lvl, pos, [64, 64], goal_touched, False)
     return thisGoal
 
 #----------------------------------------------+
 # Function to create the basic weapon: Gun
 #----------------------------------------------+
 def generate_gun_dmg():
-    dmg = random.randint(1, 10)
+    dmg = random.randint(10, 30)
     return dmg
 
 def generateGun():
-    wpn = Weapon.Weapon("gun", 5, 0.2, generate_gun_dmg)
+    wpn = Weapon.Weapon("gun", 5, 0.3, generate_gun_dmg)
     return wpn
 

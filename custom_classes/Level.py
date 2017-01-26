@@ -11,26 +11,34 @@ import numpy
 import pygame
 
 import Functions
-from classes import Projectile
+from custom_classes import Projectile
 
 
 class Level():
 
     theme           = "classic"
-    all_textures    = {} # A dictionary storing all texture that will be used in the level (which depends on theme)
-    all_images      = {} # A dictionary of all images used for objects, items, etc.
-    texture_size    = [] # The dimension of textures in pixels (widht, height)
-    texture_grid    = [] # An 2-dimensional array defining which ground textures are used where in the level
+    all_textures    = {}        # A dictionary storing all texture that will be used in the level (which depends on theme)
+    all_images      = {}        # A dictionary of all images used for objects, items, etc.
+    texture_size    = []        # The dimension of textures in pixels (widht, height)
+    texture_grid    = []        # An 2-dimensional array defining which ground textures are used where in the level
     items           = pygame.sprite.Group() # A spriteGroup containing all items in the level
     render_items    = pygame.sprite.Group() # A spriteGroup that contains only the items that should be rendered
-    player          = [] # An object of class player
+    player          = []                    # The sprite representing the player
+    chars           = pygame.sprite.Group() # All characters on the map. The first character in the group is always the player
+    render_chars    = pygame.sprite.Group() # All the villians that are currently visible
+    projectiles     = pygame.sprite.Group()
+    render_projectiles = pygame.sprite.Group() # A separate group managing the projectiles
 
+    #-----------------------------------------------------------------------+
     # Constructor
+    #-----------------------------------------------------------------------+
     def __init__(self, theme, width, height):
         self.theme          = theme                         # Set the theme
         self.texture_grid   = numpy.zeros((width, height))  # Set level dimension
 
+    #-----------------------------------------------------------------------+
     # Load all relevant textures/images for the level - based on its' theme
+    #-----------------------------------------------------------------------+
     def load_textures(self):
         # get a list of all files in according directory
         txtr_files  = os.listdir("imgs/" + self.theme + "/")
@@ -44,18 +52,20 @@ class Level():
         # Update the texture size
         self.texture_size       = self.all_textures[self.all_textures.keys()[0]].get_rect().size
 
-    # Generate a projectile whenever the player fires a shot
-    def player_fire_shot(self):
-        from_wpn        = self.player.get_current_weapon() # Weapon that was used to fire the shot
-        # Generate a projectile
-        proj            = Projectile.Projectile(self)
-        self.items.add(proj)
+    #-----------------------------------------------------------------------+
+    # Generate a projectile whenever a character fires a shot
+    #-----------------------------------------------------------------------+
+    def char_fire(self, char):
+       # Generate a projectile
+        proj            = Projectile.Projectile(self, char)
+        self.projectiles.add(proj)
         return proj
 
+    #-----------------------------------------------------------------------+
     # Function to be called by the game loop.
     # Will move projectiles and villians
+    #-----------------------------------------------------------------------+
     def update(self):
-        for i in self.items:
-            if type(i) is Projectile.Projectile: # Move all projectiles
-                i.move_me()
+        for i in self.projectiles:
+            i.move_me()
 

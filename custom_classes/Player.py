@@ -9,9 +9,9 @@ import math
 
 import BasicObjects
 import Constants
+import custom_classes.Character
 
-
-class Player(pygame.sprite.Sprite):
+class Player(custom_classes.Character.Character):
 
     angle       = 0  # Viewing angle
     moving_dir  = 1  # postive number represent moving to the front, negative number show we last moved back
@@ -35,21 +35,8 @@ class Player(pygame.sprite.Sprite):
         # By default add a gun to the inventory
         self.inventory.append(BasicObjects.generateGun())
 
-    #------------------------------------+
-    # Function to change the angle
-    # and adjust the image accordingly
-    # -----------------------------------+
-    def turn(self, degree):
-        self.angle+=degree
-        orig_xy = self.rect.center
-        # Rotate image
-        self.image = pygame.transform.rotate(self.baseimage, -(self.angle))
-        # Reposition
-        self.rect.center = orig_xy
-
     # ------------------------------------+
-    # Function to change the angle
-    # and adjust the image accordingly
+    # Function to move the player
     # -----------------------------------+
     def move(self, direction, lvl):
         v = (math.cos(self.angle * math.pi / 180), math.sin(self.angle * math.pi / 180))
@@ -63,18 +50,16 @@ class Player(pygame.sprite.Sprite):
             self.position = [new_x, new_y]
         self.moving_dir = direction
 
-
     # ------------------------------------+
     # Bounce back method moves player to the
     # previous position. Used by non-passable
     # objects.
     # ------------------------------------+
-    def bounce_back(self, distance):
+    def bounce_back(self):
         v = (math.cos(self.angle * math.pi / 180), math.sin(self.angle * math.pi / 180))
-        new_x = self.position[0] + v[0] * distance * self.moving_dir*(-1) # Move just opposite to what we did before
-        new_y = self.position[1] + v[1] * distance * self.moving_dir*(-1)
+        new_x = self.position[0] + v[0] * self.speed * self.moving_dir*(-1) # Move just opposite to what we did before
+        new_y = self.position[1] + v[1] * self.speed * self.moving_dir*(-1)
         self.position = [new_x, new_y]
-
 
     # ------------------------------------+
     # Return the currently used weapon
