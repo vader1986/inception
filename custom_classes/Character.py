@@ -8,7 +8,6 @@ import pygame
 class Character(pygame.sprite.Sprite):
 
     name            = ""            # Determines img for villians
-    hitpoints       = [100, 100]    # A list with 2 items. Current_hitpoints and max_hittpoints
     angle           = 0             # Angle of view
     position        = []            # Character's position in the level (x, y)
     speed           = None          # Current speed
@@ -31,7 +30,6 @@ class Character(pygame.sprite.Sprite):
     # ------------------------------------+
     def get_hit(self, projectile):
         self.hitpoints[0]-=projectile.dmg
-        print "Aua:" + str(self.hitpoints[0])
         projectile.kill()
         if self.hitpoints[0] <= 0:
             self.kill()

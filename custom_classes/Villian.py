@@ -8,12 +8,12 @@
 import pygame, custom_classes
 
 import BasicObjects
+from custom_classes import Character
 
 
 class Villian(custom_classes.Character.Character):
 
     name            = "zombie"  # Determines used image and behaviour(?)
-    hitpts          = [100,100] # Current and Maximum hitpoints
     angle           = 0         # Angle of view
     viewing_range   = 10        # When does the villian react to the player? texture grid dimension
     position        = []        # Level position
@@ -29,3 +29,5 @@ class Villian(custom_classes.Character.Character):
         self.position   = position
         # By default add a gun to the inventory
         self.inventory.append(BasicObjects.generateGun())
+        self.hitpoints  = [100, 100]
+        # self.angle      = 0

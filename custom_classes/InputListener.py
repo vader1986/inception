@@ -20,7 +20,9 @@ def listen(event, lvl):
         lvl.player.move(1, lvl)
     if pressed[Constants.down]:
         lvl.player.move(-1, lvl)
+    if pressed[pygame.K_w]: # DEBUGING
+        for i in lvl.chars:
+            print "Hpt: " + str(i.hitpoints[0])
     if event.type == pygame.KEYDOWN: # No constant fire
         if pressed[Constants.fire]:
-            lvl.char_fire(lvl.player) # Let player fire
             lvl.char_fire(lvl.player) # Let player fire

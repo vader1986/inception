@@ -117,8 +117,8 @@ def initRandomLevel(theme, width, height):
     #-------------------------+
     # Add some zombies
     #-------------------------+
-    boooo           = Villian.Villian("zombie", lvl, [5,5])
-    lvl.chars.add(boooo)
+    for i in range(0, 10):
+        lvl.chars.add(Villian.Villian("zombie", lvl, [random.randint(1, width), random.randint(1, height-1)]))
     #-------------------------+
     # Generate Texture grid
     #-------------------------+
@@ -153,12 +153,6 @@ pygame.display.set_caption(Constants.game_title)
 # Setup player and level
 this_lvl = initRandomLevel("classic", 100, 25)
 
-# Setup the SpriteGroups
-#chars       = pygame.sprite.Group()
-
-# Add elements to spriteGroups
-#chars.add(this_lvl.player)
-
 #--------------------------------------------------------------------------------------------------------------+
 #  Start the game
 #--------------------------------------------------------------------------------------------------------------+
@@ -188,7 +182,6 @@ while True:
     screen.fill(Constants.BLACK)  # Clear the screen
     renderTextures(this_lvl, screen_w, screen_h, screen)    # Render textures
     renderItems(this_lvl, screen_w, screen_h, screen)       # Render all items
-#    chars.draw(screen)  # Draw player
 
     # 60 fps
     clock.tick(60)
