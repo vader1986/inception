@@ -11,11 +11,18 @@ import pygame
 
 import BasicObjects
 import Constants
+import Functions
 from custom_classes import InputListener
 from custom_classes import Item
 from custom_classes import Level
+from custom_classes import Main_Menu
+from custom_classes import Menu_Item
 from custom_classes import Player
 
+#--------------------------------------------------------------------------------------------------------------+
+# Game Parameters
+#--------------------------------------------------------------------------------------------------------------+
+game_state = "main_menu"    # Available game states: main_menu, configure, set_name, play_level, end_level
 
 #--------------------------------------------------------------------------------------------------------------+
 # Functions
@@ -153,6 +160,13 @@ pygame.display.set_caption(Constants.game_title)
 # Setup player and level
 this_lvl = initRandomLevel("classic", 100, 25)
 
+
+#----------------------------------------------+
+# Setup the Main Menu
+#----------------------------------------------+
+menuItems  = [Menu_Item.Menu_item("START GAME"), Menu_Item.Menu_item("CHANGE NAME"), Menu_Item.Menu_item("CONTROLS")]
+mainMenu   = Main_Menu.Main_Menu(menuItems, Functions.load_img("menu_imgs/active_button.png"), Functions.load_img("menu_imgs/passive_button.png"))
+
 #--------------------------------------------------------------------------------------------------------------+
 #  Start the game
 #--------------------------------------------------------------------------------------------------------------+
@@ -161,27 +175,38 @@ while True:
     if ev.type == pygame.QUIT:
         break
 
-    # Move projectiles and villians
-    this_lvl.update()
+    #-----------------------------------+
+    # Playing the level
+    #-----------------------------------+
+    if game_state == "main_menu":
+        screen.fill(Constants.BLACK)  # Clear the screen
+        mainMenu.render_menu(screen, screen_w, screen_h, 30)
+        InputListener.listen(ev, mainMenu, this_lvl, game_state)
+    #-----------------------------------+
+    # Playing the level
+    #-----------------------------------+
+    elif game_state == "play_level":
+        # Move projectiles and villians
+        this_lvl.update()
 
-    # Input listener for keyboard (should be gamepad later as well)
-    InputListener.listen(ev, this_lvl)
+        # Input listener for keyboard (should be gamepad later as well)
+        InputListener.listen(ev, mainMenu, this_lvl)
 
-    # Collosion detection and handling
-    touched = pygame.sprite.spritecollide(this_lvl.player, this_lvl.items, False)
-    for i in touched:
-        if type(i) is Item.Item:
-            i.when_touched(this_lvl.player)
+        # Collosion detection and handling
+        touched = pygame.sprite.spritecollide(this_lvl.player, this_lvl.items, False)
+        for i in touched:
+            if type(i) is Item.Item:
+                i.when_touched(this_lvl.player)
 
-    # Check if projectiles hit villians
-    char_got_hit = pygame.sprite.groupcollide(this_lvl.chars, this_lvl.render_projectiles, False, False)
-    for i in char_got_hit:
-        i.get_hit(char_got_hit[i][0])
+        # Check if projectiles hit villians
+        char_got_hit = pygame.sprite.groupcollide(this_lvl.chars, this_lvl.render_projectiles, False, False)
+        for i in char_got_hit:
+            i.get_hit(char_got_hit[i][0])
 
-    # Rendering
-    screen.fill(Constants.BLACK)  # Clear the screen
-    renderTextures(this_lvl, screen_w, screen_h, screen)    # Render textures
-    renderItems(this_lvl, screen_w, screen_h, screen)       # Render all items
+        # Rendering
+        screen.fill(Constants.BLACK)  # Clear the screen
+        renderTextures(this_lvl, screen_w, screen_h, screen)    # Render textures
+        renderItems(this_lvl, screen_w, screen_h, screen)       # Render all items
 
     # 60 fps
     clock.tick(60)

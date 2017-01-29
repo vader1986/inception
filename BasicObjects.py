@@ -8,9 +8,9 @@
 #-----------------------------------------------+
 import random
 
+import Functions
 from custom_classes import Weapon
 from custom_classes import Item
-
 
 #----------------------------------------------+
 # Function to generate a tree on the level
